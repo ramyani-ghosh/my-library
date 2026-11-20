@@ -1096,7 +1096,8 @@ body.viewing { overflow: hidden; }
   z-index: 10;              /* under the darkness veil, so it is lit with the room */
   transform: translateX(-50%);
   max-width: calc(100% - 40px);
-  padding: 15px 34px 9px;
+  padding: 15px 34px 8px;
+  text-align: center;
   border-radius: 3px;
   background-color: #17140f;
   background-image:
@@ -1154,6 +1155,26 @@ body.viewing { overflow: hidden; }
   mask: var(--plaque-orn) center / contain no-repeat;
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.8));
 }
+/* small engraved second line: "209 books read" */
+.plaque-count {
+  position: relative;
+  display: block;
+  margin-top: 2px;
+  font-family: "Cinzel", Georgia, serif;
+  font-weight: 500;
+  font-size: 8.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-align: center;
+  padding-left: 0.24em;     /* balance the trailing letter-space */
+  color: transparent;
+  background: var(--brass);
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0.85;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.9));
+}
+.plaque-count:empty { display: none; }
 .plaque-text {
   position: relative;
   display: block;

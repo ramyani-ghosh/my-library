@@ -1336,8 +1336,7 @@
 
   function setOwner(name, { persist = libSource === "upload" } = {}) {
     owner = cleanName(name);
-    $("plaqueText").textContent = owner ? libraryTitle(owner) : "";
-    $("plaque").hidden = !owner;
+    $("plaqueText").textContent = libraryTitle(owner);   // "My Library" when unnamed
     document.title = libraryTitle(owner);
     if (persist) {
       try { owner ? localStorage.setItem(OWNER_KEY, owner) : localStorage.removeItem(OWNER_KEY); } catch { /* ignore */ }
@@ -1379,7 +1378,7 @@
   }
   function updatePreview() {
     const n = cleanName(nd.input.value);
-    nd.preview.textContent = n ? `The plaque will read “${libraryTitle(n)}”` : "Leave it blank for no plaque.";
+    nd.preview.textContent = n ? `The plaque will read “${libraryTitle(n)}”` : "Left blank, the plaque reads \u201cMy Library\u201d.";
   }
   nd.input.addEventListener("input", updatePreview);
   nd.root.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeNameDialog(); });

@@ -74,7 +74,7 @@ When the full header scrolls out of view, a slim bar pins itself to the top: the
 
 ## Whose library: the plaque
 
-A cast plaque on the top of the bookcase names the library, for example "Ramyani’s Library": black hammered face, raised brass border, corner screws and gold lettering. The page title follows it.
+A cast plaque on the top of the bookcase names the library, for example "Ramyani’s Library", with the number of books read engraved beneath: black hammered face, raised brass border, corner screws and gold lettering. Without a name it reads "My Library". The page title follows it.
 
 - The published library's owner is set in `index.html`: `<meta name="library-owner" content="Ramyani">`.
 - **+ New library** asks whose library it will be before you load a file. The current shelf is kept until a new file actually loads, so **Back to the bookshelf** (or Esc) returns to it. The name is remembered with the new library in the browser.
