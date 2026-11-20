@@ -320,6 +320,14 @@ body.intro .tb-side { opacity: 0; }
    itself clips sideways (html overflow-x), so nothing scrolls. */
 .wall { position: relative; }
 .pools { position: absolute; inset: 0; overflow: clip; pointer-events: none; }
+/* phones: darkness away from the candles, one painted panel per shelf row */
+.dark-row {
+  position: absolute;
+  left: 0; right: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: rgba(6, 4, 3, 0.54);
+}
 .books { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .lights { position: absolute; inset: 0; pointer-events: none; }   /* no z-index: children layer with the case */
 .dark {

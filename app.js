@@ -607,7 +607,7 @@
     });
 
     if (structural) placeCandles(bays, tiers, tierH);
-    shadeBooks(placed, bays);
+    shadeBooks(placed);
   }
 
   // Sconces sit on the columns in a checkerboard; light falls off away from them.
@@ -638,7 +638,25 @@
     // tens of MB of graphics memory, so phones shade each book instead
     // (see shadeBooks).
     currentLights = lights;
-    if (bays > 1) {
+    if (bays === 1) {
+      // Phones: the same darkness, as one plain painted panel per shelf row,
+      // each shaded away from its nearest candle. Painted panels need no
+      // dedicated graphics memory (unlike a single 9000px-tall mask layer).
+      parts.structure.querySelectorAll(".tier").forEach((tier) => {
+        const tr = tier.getBoundingClientRect();
+        const top = tr.top - wallRect.top, mid = top + tr.height / 2;
+        let near = null;
+        for (const l of lights) if (!near || Math.abs(l.y - mid) < Math.abs(near.y - mid)) near = l;
+        const panel = make("dark-row");
+        panel.style.top = top + "px";
+        panel.style.height = tr.height + "px";
+        if (near) {
+          panel.style.background = `radial-gradient(circle 330px at ${near.x}px ${near.y - 20 - top}px, ` +
+            "rgba(6,4,3,0) 0, rgba(6,4,3,0) 18%, rgba(6,4,3,0.30) 55%, rgba(6,4,3,0.54) 100%)";
+        }
+        frag.appendChild(panel);
+      });
+    } else {
       const dark = make("dark");
       const holes = lights.map((l) =>
         `radial-gradient(circle 330px at ${l.x}px ${l.y - 20}px, transparent 0, transparent 18%, rgba(0,0,0,0.55) 55%, #000 100%)`).join(",");
@@ -682,25 +700,11 @@
     sleepFarCandles();
   }
 
-  // Phones: tint each book by its distance from the candles (cheap and static),
-  // instead of the full-height darkness mask used on wider screens.
+  // Books used to carry their own candlelight tint; the darkness panels
+  // (phones) and mask (wider screens) do that now, so clear any old tint.
   let currentLights = [];
-  function shadeBooks(placed, bays) {
-    if (bays > 1) {
-      for (const { el } of placed) el.style.removeProperty("--light");
-      return;
-    }
-    for (const { el, cx, cy } of placed) {
-      let sum = 0;
-      for (const l of currentLights) {
-        const d = Math.hypot((cx - l.x) * 0.85, (cy - l.y) * 1.25);
-        sum += Math.exp(-((d / 260) ** 2));
-      }
-      const lit = Math.min(1.14, 0.56 + sum * 0.66);
-      el.style.setProperty("--light", lit < 1
-        ? `rgba(8,5,3,${(1 - lit).toFixed(3)})`
-        : `rgba(255,190,120,${((lit - 1) * 0.6).toFixed(3)})`);
-    }
+  function shadeBooks(placed) {
+    for (const { el } of placed) el.style.removeProperty("--light");
   }
 
   // Only candles near the screen flicker and cast their light pool; the rest
