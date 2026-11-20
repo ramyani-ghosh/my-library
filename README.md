@@ -32,6 +32,10 @@ This repo already includes one. **Publishing it makes the whole file public**, r
 | `library.csv` | The library shown by default (a Goodreads export) |
 | `sample-library.csv` | A made-up library in Goodreads export format, for the "browse a sample library" link |
 
+## Updating the site
+
+GitHub Pages lets browsers cache files for 10 minutes. `index.html` loads `styles.css?v=N` and `app.js?v=N`: bump `N` whenever either file changes, so visitors get the new version straight away instead of a stale (or mismatched) copy.
+
 ## Run it locally
 
 Browsers block reading the sample file when the page is opened straight from disk, so serve the folder:
