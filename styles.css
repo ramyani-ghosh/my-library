@@ -709,8 +709,9 @@ body.intro .tb-side { opacity: 0; }
 .book.gilt .author { color: #d6b56c; }
 .book.inked .author { color: var(--t); }
 
-/* a book leaning at the end of a half-empty shelf */
-.book.lean { transform-origin: 0 100%; transform: rotate(var(--lean, 7deg)); }
+/* the last book on a shelf leaning on its neighbour or against the column
+   (angle and pivot corner are set in layout) */
+.book.lean { transform-origin: var(--lean-o, 0 100%); transform: rotate(var(--lean, 0deg)); }
 
 /* ---------- Sort dropdown ---------- */
 

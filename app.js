@@ -575,9 +575,11 @@
     shelves.forEach((idxs, s) => {
       const t = Math.floor(s / bays), b = s % bays;
       const r = rng(hash(`bay${t}-${b}`));
-      let x = edge + b * (bayW + pil) + 8;
+      const bayLeft = edge + b * (bayW + pil);
+      const wallX = bayLeft + bayW;          // inner face of the column on the right
+      let x = bayLeft + 8;
       const floor = t * (tierH + boardH) + tierH;
-      let usedW = 0;
+      let prevRight = null, prevH = 0;
       idxs.forEach((i, k) => {
         const book = books[i], d = designs[i];
         let el = cache.els.get(book.id);
@@ -586,28 +588,74 @@
           el.getAnimations().forEach((a) => a.cancel());
           el.classList.remove("lean", "flying", "pulled");
           el.style.removeProperty("--lean");
+          el.style.removeProperty("--lean-o");
         }
         el.dataset.idx = i;
-        // leaning book: last on a roomy shelf
-        const isLast = k === idxs.length - 1;
-        if (isLast && idxs.length > 2) {
-          const angle = 5 + r() * 5;
-          if (bayInner - usedW - d.w > d.h * Math.sin(angle * Math.PI / 180) + 8 && r() < 0.75) {
+        let left = Math.round(x);              // whole pixels: no repaint when moved
+        // The last book on a roomy shelf may lean, but never on thin air.
+        if (k === idxs.length - 1 && idxs.length > 2 && r() < 0.75) {
+          const lean = leanFor(d, prevRight, prevH, wallX, r);
+          if (lean) {
+            left = lean.left;
             el.classList.add("lean");
-            el.style.setProperty("--lean", angle.toFixed(1) + "deg");
-            x += 3;
+            el.style.setProperty("--lean", lean.deg.toFixed(2) + "deg");
+            el.style.setProperty("--lean-o", lean.origin);
           }
         }
-        el.style.left = Math.round(x) + "px";   // whole pixels: no repaint when moved
+        el.style.left = left + "px";
         el.style.top = Math.round(floor - d.h) + "px";
-        placed.push({ el, cx: x + d.w / 2, cy: floor - d.h / 2 });
+        placed.push({ el, cx: left + d.w / 2, cy: floor - d.h / 2 });
+        prevRight = left + d.w; prevH = d.h;
         x += d.w + 1;
-        usedW += d.w + 1;
       });
     });
 
     if (structural) placeCandles(bays, tiers, tierH);
     shadeBooks(placed);
+  }
+
+  /*
+   * How the last book on a shelf leans, so it always rests on something:
+   *   - wedged: it leans right, its top against the column and its lifted
+   *     bottom corner against the book beside it (only when the gap fits);
+   *   - resting: it leans left onto its neighbour, standing on its bottom-left
+   *     corner, its top against the neighbour's side (or over its top corner
+   *     when it is the taller book).
+   * Returns { left, deg, origin } or null when neither fits.
+   */
+  function leanFor(d, nRight, nH, wallX, r) {
+    if (nRight == null) return null;
+    const rad = Math.PI / 180, w = d.w, h = d.h;
+    const gap = wallX - nRight;               // room between the neighbour and the column
+    const preferWedge = r() < 0.55;
+
+    // Wedged: w*cos(a) + h*sin(a) = gap.
+    const R = Math.hypot(w, h), phi = Math.atan2(w, h);
+    const wedge = () => {
+      if (!(gap > w && gap < R)) return null;
+      const a = Math.asin(gap / R) - phi;
+      if (a > 3 * rad && a < 22 * rad) {
+        const br = nRight + w * Math.cos(a);  // bottom-right corner on the shelf
+        const left = Math.round(br - w);
+        const a2 = Math.asin(Math.min(1, (wallX - (left + w)) / h)); // top exactly on the column
+        if (a2 > 2 * rad) return { left, deg: a2 / rad, origin: "100% 100%" };
+      }
+      return null;
+    };
+
+    // Resting on the neighbour, leaning left.
+    const rest = () => {
+      const want = (5 + r() * 6) * rad;
+      const foot = Math.round(Math.min(h * Math.sin(want), nH * Math.tan(want)));
+      if (foot < 2) return null;
+      let a = Math.atan(foot / nH);             // top edge over the neighbour's corner
+      if (h * Math.cos(a) <= nH) a = Math.asin(foot / h);  // or top corner on its side
+      const left = nRight + foot;
+      if (left + w * Math.cos(a) > wallX - 2) return null;  // no room
+      return { left, deg: -a / rad, origin: "0 100%" };
+    };
+
+    return preferWedge ? (wedge() || rest()) : (rest() || wedge());
   }
 
   // Sconces sit on the columns in a checkerboard; light falls off away from them.
