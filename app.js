@@ -510,6 +510,7 @@
   function layout(force) {
     if (!books.length || els.bookcase.hidden) return;
     const W = els.wall.clientWidth;
+    if (W < 200) return;   // not visible yet; the ResizeObserver lays out once it is
     const bays = W < 560 ? 1 : W < 900 ? 2 : W < 1250 ? 3 : 4;
     const tierH = cssPx("--tier-h");
     const boardH = cssPx("--board-h");
@@ -1332,16 +1333,20 @@
     showWelcome();
   });
 
-  let resizeTimer, lastWidth = innerWidth;
-  window.addEventListener("resize", () => {
+  // Re-shelve whenever the bookcase's width changes. Watching the element
+  // itself (not just the window) also catches a page that first laid out
+  // while hidden or zero-width, e.g. opened in a background tab.
+  let resizeTimer, lastWallWidth = -1;
+  new ResizeObserver(() => {
+    const w = els.wall.clientWidth;
+    if (w === lastWallWidth) return;      // height-only changes don't matter
+    lastWallWidth = w;
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (innerWidth === lastWidth) return;   // ignore phone toolbar show/hide
-      lastWidth = innerWidth;
       if (viewer.open) closeViewer(true);
       layout(false);
-    }, 150);
-  });
+    }, 120);
+  }).observe(els.wall);
 
   /* ============================================================
      Start
