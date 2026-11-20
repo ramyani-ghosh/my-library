@@ -621,12 +621,9 @@
         if (bays > 1 && (t + i) % 2 === 0) return;
         if (bays === 1 && t % 2 === 1 && tiers > 2 && t % 4 === 3) return;
         const pr = p.getBoundingClientRect();
-        // Between bays a sconce sits on the column's centre. With a single bay
-        // (phones) the only columns are the outer edges, so mount it on their
-        // inner side; otherwise the case edge would clip it in half.
-        let x = pr.left - wallRect.left + pr.width / 2;
-        if (bays === 1) x = i === 0 ? pr.right - wallRect.left + 13 : pr.left - wallRect.left - 13;
-        lights.push({ x, y: tr.top - wallRect.top + tierH * 0.52 });
+        // Mounted on the column's centre. On phones these are the outer edge
+        // columns, and the sconce overhangs the case (it isn't clipped).
+        lights.push({ x: pr.left - wallRect.left + pr.width / 2, y: tr.top - wallRect.top + tierH * 0.52 });
       });
     });
 
@@ -643,6 +640,8 @@
     }
     frag.appendChild(dark);
 
+    // The big light pools are clipped to the case; the sconces are not.
+    const pools = make("pools");
     lights.forEach((l, i) => {
       const r = rng(hash(`pool${i}`));
       const pool = make("pool");
@@ -650,8 +649,9 @@
       pool.style.top = (l.y - 30) + "px";
       pool.style.animationDuration = (2.4 + r() * 1.6).toFixed(2) + "s";
       pool.style.animationDelay = `-${(r() * 3).toFixed(2)}s`;
-      frag.appendChild(pool);
+      pools.appendChild(pool);
     });
+    frag.appendChild(pools);
 
     lights.forEach((l, i) => {
       const s = make("sconce");

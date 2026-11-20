@@ -316,7 +316,10 @@ body.intro .tb-side { opacity: 0; }
   box-shadow: inset 0 0 0 1px rgba(255,200,140,0.06), inset 0 4px 10px rgba(0,0,0,0.6);
 }
 
-.wall { position: relative; overflow: clip; }
+/* Not clipped, so edge-mounted sconces can overhang the case; the page
+   itself clips sideways (html overflow-x), so nothing scrolls. */
+.wall { position: relative; }
+.pools { position: absolute; inset: 0; overflow: clip; pointer-events: none; }
 .books { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .lights { position: absolute; inset: 0; pointer-events: none; }   /* no z-index: children layer with the case */
 .dark {
