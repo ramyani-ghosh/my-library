@@ -1,0 +1,81 @@
+Book Id,Title,Author,Author l-f,Additional Authors,ISBN,ISBN13,My Rating,Average Rating,Publisher,Binding,Number of Pages,Year Published,Original Publication Year,Date Read,Date Added,Bookshelves,Bookshelves with positions,Exclusive Shelf,My Review,Spoiler,Private Notes,Read Count,Owned Copies
+1000,Pride and Prejudice,Jane Austen,"Austen, Jane",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,1187,2003,1813,2020/03/13,2020/03/13,,,read,"A reread, and better the second time.",,,1,0
+1001,Jane Eyre,Charlotte Brontë,"Brontë, Charlotte",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,978,2013,1847,2024/01/17,2024/01/17,,,read,Couldn't put it down.,,,1,0
+1002,Wuthering Heights,Emily Brontë,"Brontë, Emily",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,343,2007,1847,2018/02/18,2018/02/18,,,read,,,,1,0
+1003,"Moby-Dick; or, The Whale",Herman Melville,"Melville, Herman",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,191,2007,1851,2025/10/02,2025/10/02,,,read,Couldn't put it down.,,,1,0
+1004,Great Expectations,Charles Dickens,"Dickens, Charles",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,331,2018,1861,2023/03/10,2023/03/10,,,read,"A reread, and better the second time.",,,1,0
+1005,A Tale of Two Cities,Charles Dickens,"Dickens, Charles",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,474,2011,1859,2023/11/06,2023/11/06,,,read,Couldn't put it down.,,,1,0
+1006,Bleak House,Charles Dickens,"Dickens, Charles",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,511,2015,1853,2023/12/03,2023/12/03,,,read,,,,1,0
+1007,Middlemarch,George Eliot,"Eliot, George",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,1018,2011,1871,2023/07/25,2023/07/25,,,read,"A reread, and better the second time.",,,1,0
+1008,Anna Karenina,Leo Tolstoy,"Tolstoy, Leo",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,704,2016,1878,2018/03/23,2018/03/23,,,read,Gorgeous prose.,,,1,0
+1009,War and Peace,Leo Tolstoy,"Tolstoy, Leo",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,331,2016,1869,2020/12/15,2020/12/15,,,read,Gorgeous prose.,,,1,0
+1010,Crime and Punishment,Fyodor Dostoevsky,"Dostoevsky, Fyodor",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,170,2002,1866,2017/06/05,2017/06/05,,,read,"Not for me, though I see why people love it.",,,1,0
+1011,The Brothers Karamazov,Fyodor Dostoevsky,"Dostoevsky, Fyodor",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,1107,2018,1880,2024/06/11,2024/06/11,,,read,Gorgeous prose.,,,1,0
+1012,Madame Bovary,Gustave Flaubert,"Flaubert, Gustave",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,214,2009,1857,2016/02/09,2016/02/09,,,read,,,,1,0
+1013,Les Misérables,Victor Hugo,"Hugo, Victor",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,800,2000,1862,2024/11/27,2024/11/27,,,read,Gorgeous prose.,,,1,0
+1014,The Count of Monte Cristo,Alexandre Dumas,"Dumas, Alexandre",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,536,2009,1844,2020/03/20,2020/03/20,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1015,"Frankenstein: or, The Modern Prometheus",Mary Shelley,"Shelley, Mary",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,255,2005,1818,2026/04/13,2026/04/13,,,read,Gorgeous prose.,,,1,0
+1016,Dracula,Bram Stoker,"Stoker, Bram",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,660,2013,1897,2021/09/09,2021/09/09,,,read,"A reread, and better the second time.",,,1,0
+1017,The Picture of Dorian Gray,Oscar Wilde,"Wilde, Oscar",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,399,2007,1890,2025/07/08,2025/07/08,,,read,,,,1,0
+1018,The Importance of Being Earnest,Oscar Wilde,"Wilde, Oscar",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,628,2009,1895,2018/01/16,2018/01/16,,,read,Couldn't put it down.,,,1,0
+1019,"Little Women (Little Women, #1)",Louisa May Alcott,"Alcott, Louisa May",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,742,2004,1868,2017/07/18,2017/07/18,,,read,,,,1,0
+1020,The Adventures of Huckleberry Finn,Mark Twain,"Twain, Mark",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,1025,2017,1884,2023/10/21,2023/10/21,,,read,Gorgeous prose.,,,1,0
+1021,The Scarlet Letter,Nathaniel Hawthorne,"Hawthorne, Nathaniel",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,217,2006,1850,2021/07/13,2021/07/13,,,read,Couldn't put it down.,,,1,0
+1022,Sense and Sensibility,Jane Austen,"Austen, Jane",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,197,2003,1811,2018/08/06,2018/08/06,,,read,Couldn't put it down.,,,1,0
+1023,Emma,Jane Austen,"Austen, Jane",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,142,2002,1815,2024/03/18,2024/03/18,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1024,Persuasion,Jane Austen,"Austen, Jane",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,835,2015,1817,2024/07/05,2024/07/05,,,read,Couldn't put it down.,,,1,0
+1025,Northanger Abbey,Jane Austen,"Austen, Jane",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,265,2004,1817,2016/08/15,2016/08/15,,,read,Couldn't put it down.,,,1,0
+1026,Tess of the d'Urbervilles,Thomas Hardy,"Hardy, Thomas",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1147,2000,1891,2026/06/24,2026/06/24,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1027,Far from the Madding Crowd,Thomas Hardy,"Hardy, Thomas",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,1171,2009,1874,2023/06/05,2023/06/05,,,read,,,,1,0
+1028,Heart of Darkness,Joseph Conrad,"Conrad, Joseph",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,432,2011,1899,2016/12/28,2016/12/28,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1029,The Time Machine,H.G. Wells,"Wells, H.G.",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,489,2007,1895,2023/09/25,2023/09/25,,,read,Gorgeous prose.,,,1,0
+1030,The War of the Worlds,H.G. Wells,"Wells, H.G.",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,149,2000,1898,2026/04/07,2026/04/07,,,read,"A reread, and better the second time.",,,1,0
+1031,"Twenty Thousand Leagues Under the Sea (Extraordinary Voyages, #6)",Jules Verne,"Verne, Jules",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1005,2011,1870,2022/05/07,2022/05/07,,,read,"A reread, and better the second time.",,,1,0
+1032,Around the World in Eighty Days,Jules Verne,"Verne, Jules",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,781,2006,1872,2016/04/04,2016/04/04,,,read,Gorgeous prose.,,,1,0
+1033,Treasure Island,Robert Louis Stevenson,"Stevenson, Robert Louis",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,263,2003,1883,,2016/01/01,,,read,Gorgeous prose.,,,1,0
+1034,Strange Case of Dr Jekyll and Mr Hyde,Robert Louis Stevenson,"Stevenson, Robert Louis",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,770,2002,1886,2026/04/16,2026/04/16,,,read,,,,1,0
+1035,"The Hound of the Baskervilles (Sherlock Holmes, #5)",Arthur Conan Doyle,"Doyle, Arthur Conan",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,415,2005,1902,2021/08/13,2021/08/13,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1036,"A Study in Scarlet (Sherlock Holmes, #1)",Arthur Conan Doyle,"Doyle, Arthur Conan",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1061,2011,1887,2015/03/19,2015/03/19,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1037,Alice's Adventures in Wonderland,Lewis Carroll,"Carroll, Lewis",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,1168,2004,1865,,2016/01/01,,,read,Gorgeous prose.,,,1,0
+1038,Through the Looking-Glass,Lewis Carroll,"Carroll, Lewis",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1116,2007,1871,2018/04/01,2018/04/01,,,read,"Not for me, though I see why people love it.",,,1,0
+1039,The Jungle Book,Rudyard Kipling,"Kipling, Rudyard",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,214,2011,1894,2020/05/18,2020/05/18,,,read,Gorgeous prose.,,,1,0
+1040,The Wind in the Willows,Kenneth Grahame,"Grahame, Kenneth",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,1117,2004,1908,2025/10/27,2025/10/27,,,read,"Not for me, though I see why people love it.",,,1,0
+1041,"Anne of Green Gables (Anne of Green Gables, #1)",L.M. Montgomery,"Montgomery, L.M.",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,465,2019,1908,,2016/01/01,,,read,Couldn't put it down.,,,1,0
+1042,The Secret Garden,Frances Hodgson Burnett,"Burnett, Frances Hodgson",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,216,2010,1911,2017/03/05,2017/03/05,,,read,,,,1,0
+1043,Peter Pan,J.M. Barrie,"Barrie, J.M.",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,206,2007,1911,2023/09/18,2023/09/18,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1044,The Age of Innocence,Edith Wharton,"Wharton, Edith",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,147,2002,1920,,2016/01/01,,,read,Gorgeous prose.,,,1,0
+1045,The House of Mirth,Edith Wharton,"Wharton, Edith",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,657,2014,1905,2020/10/17,2020/10/17,,,read,"Not for me, though I see why people love it.",,,1,0
+1046,Mrs Dalloway,Virginia Woolf,"Woolf, Virginia",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,621,2017,1925,2023/08/17,2023/08/17,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1047,To the Lighthouse,Virginia Woolf,"Woolf, Virginia",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,737,2002,1927,2022/03/14,2022/03/14,,,read,,,,1,0
+1048,The Great Gatsby,F. Scott Fitzgerald,"Fitzgerald, F. Scott",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,340,2004,1925,2018/07/03,2018/07/03,,,read,,,,1,0
+1049,Ulysses,James Joyce,"Joyce, James",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1047,2007,1922,2025/11/12,2025/11/12,,,read,,,,1,0
+1050,Dubliners,James Joyce,"Joyce, James",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,420,2013,1914,2016/07/16,2016/07/16,,,read,"Not for me, though I see why people love it.",,,1,0
+1051,The Metamorphosis,Franz Kafka,"Kafka, Franz",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,278,2011,1915,2021/06/14,2021/06/14,,,read,Couldn't put it down.,,,1,0
+1052,The Trial,Franz Kafka,"Kafka, Franz",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,877,2010,1925,2020/09/15,2020/09/15,,,read,"Not for me, though I see why people love it.",,,1,0
+1053,Don Quixote,Miguel de Cervantes,"Cervantes, Miguel de",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,558,2003,1605,2024/05/17,2024/05/17,,,read,Couldn't put it down.,,,1,0
+1054,The Odyssey,Homer,Homer,,"=""""","=""""",4,4.01,Penguin Classics,Paperback,643,2004,-700,2019/05/02,2019/05/02,,,read,Gorgeous prose.,,,1,0
+1055,The Iliad,Homer,Homer,,"=""""","=""""",5,4.01,Penguin Classics,Paperback,1102,2010,-750,2025/05/13,2025/05/13,,,read,Couldn't put it down.,,,1,0
+1056,"Walden; or, Life in the Woods",Henry David Thoreau,"Thoreau, Henry David",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,238,2008,1854,2019/01/26,2019/01/26,,,read,Couldn't put it down.,,,1,0
+1057,Leaves of Grass,Walt Whitman,"Whitman, Walt",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,545,2002,1855,2025/02/26,2025/02/26,,,read,"A reread, and better the second time.",,,1,0
+1058,The Call of the Wild,Jack London,"London, Jack",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,945,2008,1903,2016/08/01,2016/08/01,,,read,"Not for me, though I see why people love it.",,,1,0
+1059,White Fang,Jack London,"London, Jack",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,420,2008,1906,2017/01/17,2017/01/17,,,read,Couldn't put it down.,,,1,0
+1060,Gulliver's Travels,Jonathan Swift,"Swift, Jonathan",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,511,2009,1726,2017/04/10,2017/04/10,,,read,Gorgeous prose.,,,1,0
+1061,Robinson Crusoe,Daniel Defoe,"Defoe, Daniel",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,602,2001,1719,2023/11/06,2023/11/06,,,read,Couldn't put it down.,,,1,0
+1062,Vanity Fair,William Makepeace Thackeray,"Thackeray, William Makepeace",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1143,2015,1848,2015/12/17,2015/12/17,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1063,North and South,Elizabeth Gaskell,"Gaskell, Elizabeth",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,1103,2017,1855,2022/02/22,2022/02/22,,,read,Gorgeous prose.,,,1,0
+1064,The Moonstone,Wilkie Collins,"Collins, Wilkie",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,791,2006,1868,2023/05/23,2023/05/23,,,read,,,,1,0
+1065,The Woman in White,Wilkie Collins,"Collins, Wilkie",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,201,2004,1859,2026/11/05,2026/11/05,,,read,Couldn't put it down.,,,1,0
+1066,"The Three Musketeers (The d'Artagnan Romances, #1)",Alexandre Dumas,"Dumas, Alexandre",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,424,2001,1844,2016/11/24,2016/11/24,,,read,Couldn't put it down.,,,1,0
+1067,A Room with a View,E.M. Forster,"Forster, E.M.",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,586,2009,1908,2025/07/28,2025/07/28,,,read,Couldn't put it down.,,,1,0
+1068,Howards End,E.M. Forster,"Forster, E.M.",,"=""""","=""""",3,4.01,Penguin Classics,Paperback,629,2011,1910,2022/03/06,2022/03/06,,,read,"A reread, and better the second time.",,,1,0
+1069,The Hunchback of Notre-Dame,Victor Hugo,"Hugo, Victor",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,536,2011,1831,,2016/01/01,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1070,Dead Souls,Nikolai Gogol,"Gogol, Nikolai",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1119,2020,1842,,2016/01/01,,,read,"Slow start, but the last third is wonderful.",,,1,0
+1071,Fathers and Sons,Ivan Turgenev,"Turgenev, Ivan",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,273,2004,1862,,2016/01/01,,,read,Gorgeous prose.,,,1,0
+1072,The Awakening,Kate Chopin,"Chopin, Kate",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,566,2002,1899,,2016/01/01,,,read,"Not for me, though I see why people love it.",,,1,0
+1073,Kim,Rudyard Kipling,"Kipling, Rudyard",,"=""""","=""""",5,4.01,Penguin Classics,Paperback,887,2010,1901,2023/03/22,2023/03/22,,,read,,,,1,0
+1074,The Turn of the Screw,Henry James,"James, Henry",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,179,2016,1898,2022/03/10,2022/03/10,,,read,,,,1,0
+1075,The Portrait of a Lady,Henry James,"James, Henry",,"=""""","=""""",4,4.01,Penguin Classics,Paperback,1162,2016,1881,2021/12/23,2021/12/23,,,read,"Not for me, though I see why people love it.",,,1,0
+1076,Sons and Lovers,D.H. Lawrence,"Lawrence, D.H.",,"=""""","=""""",0,4.01,Penguin Classics,Paperback,264,2000,1913,,2015/11/19,to-read,,to-read,,,,1,0
+1077,The Prince,Niccolò Machiavelli,"Machiavelli, Niccolò",,"=""""","=""""",0,4.01,Penguin Classics,Paperback,861,2014,1532,,2015/03/21,to-read,,to-read,,,,1,0
+1078,Meditations,Marcus Aurelius,"Aurelius, Marcus",,"=""""","=""""",0,4.01,Penguin Classics,Paperback,1092,2008,180,,2016/01/01,to-read,,to-read,,,,1,0
+1079,The Art of War,Sun Tzu,"Tzu, Sun",,"=""""","=""""",0,4.01,Penguin Classics,Paperback,1167,2002,-500,,2016/01/01,to-read,,to-read,,,,1,0
