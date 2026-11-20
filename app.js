@@ -128,6 +128,10 @@
     `<path d='M1 10 10 4 19 10 10 16Z M5 10 10 7 15 10 10 13Z' fill-rule='evenodd'/>`,
   ].map((p) => svgURL(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'>${p}</svg>`));
 
+  // Hammered cast-metal surface for the name plaque, and its crest ornament.
+  rootStyle.setProperty("--tex-hammer", grain({ w: 240, h: 120, fx: 0.11, fy: 0.13, seed: 61, octaves: 3, slope: 1.9 }));
+  rootStyle.setProperty("--plaque-orn", ORN[3]);
+
   // One shared rule per texture; books just reference a class.
   const TEX_GRAINS = [...TEX.leather, ...TEX.cloth, ...TEX.paper];
   document.head.appendChild(Object.assign(document.createElement("style"), {
@@ -730,6 +734,8 @@
       const list = booksFromCSV(text);
       if (persist) save(list);
       libSource = persist ? "upload" : "sample";
+      previous = null;
+      $("backBtn").hidden = true;
       setOwner(pendingOwner, { persist });
       if (location.hash) history.replaceState(null, "", location.pathname + location.search);
       await showLibrary(list);
@@ -1425,15 +1431,52 @@
 
   /* ---------- new library ---------- */
 
+  // "New library" doesn't throw the current shelf away: it stays in memory
+  // (and in this browser) until a new file has actually loaded, so
+  // "Back to the bookshelf" can return to it.
+  let previous = null;
+
   function startNewLibrary() {
     if (viewer.open) closeViewer(true);
-    clearSaved();
-    try { localStorage.removeItem(OWNER_KEY); } catch { /* ignore */ }
-    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-    setOwner("", { persist: false });
+    previous = allBooks.length ? { list: allBooks, source: libSource, owner } : null;
     $("welcomeTitle").textContent = pendingOwner ? `Bring ${possessive(pendingOwner)} books home` : "Bring your books home";
+    $("backBtn").hidden = !previous;
+    showError("");
     showWelcome();
+    scrollTo({ top: 0 });
+    ($("backBtn").hidden ? els.dropzone : $("backBtn")).focus({ preventScroll: true });
   }
+
+  async function backToShelf() {
+    if (!previous) return;
+    const p = previous;
+    previous = null;
+    pendingOwner = "";
+    libSource = p.source;
+    setOwner(p.owner, { persist: false });
+    await showLibrary(p.list);
+  }
+
+  $("backBtn").addEventListener("click", backToShelf);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !els.welcome.hidden && previous && nd.root.hidden) backToShelf();
+  });
+
+  /* ============================================================
+     Compact header: once the full header scrolls away, it comes back
+     pinned to the top as a slim bar (logo + icons only).
+     ============================================================ */
+
+  const slot = $("topbarSlot"), bar = $("topbar");
+  const keepSlotHeight = () => { if (!bar.classList.contains("compact")) slot.style.minHeight = bar.offsetHeight + "px"; };
+  new ResizeObserver(keepSlotHeight).observe(bar);
+  new IntersectionObserver(([entry]) => {
+    const gone = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+    if (gone === bar.classList.contains("compact")) return;
+    if (gone) { keepSlotHeight(); closeSortMenu(false); }
+    bar.classList.toggle("compact", gone);
+    if (!gone) closeSortMenu(false);
+  }).observe(slot);
 
   /* ============================================================
      Events

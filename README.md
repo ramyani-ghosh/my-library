@@ -60,16 +60,20 @@ Then open http://localhost:8737.
 
 Each book gets a stable "random" look from its Goodreads ID: cloth or leather colour, gilt bands or raised ribs, an occasional title label, a font, and a height. The spine is then made exactly wide enough for its title: the title is measured, wrapped onto one to three lines, and shrunk only if it has to be. Series tags like "(Harry Potter, #1)" and long subtitles are dropped from the spine. The full title shows on hover.
 
+## Header
+
+When the full header scrolls out of view, a slim bar pins itself to the top: the small logo plus round icon buttons for Sort, Share library and New library. Scroll back to the top and the full header returns.
+
 ## Sorting
 
 **Sort** (top right) shows the current order, for example "Date read · Newest first". Click it for a menu: choose date read, title, author, year published or rating, then the order (A to Z, newest first, and so on). The menu works with the keyboard too: arrow keys to move, Enter to choose, Esc to close. The books lift off the shelves and fly to their new places, and the choice is remembered in that browser.
 
 ## Whose library: the plaque
 
-A brass plaque on the top of the bookcase names the library, for example "Ramyani’s Library". The page title follows it.
+A cast plaque on the top of the bookcase names the library, for example "Ramyani’s Library": black hammered face, raised brass border, corner screws and gold lettering. The page title follows it.
 
 - The published library's owner is set in `index.html`: `<meta name="library-owner" content="Ramyani">`.
-- **+ New library** asks whose library it will be before you load a file. The name is remembered with that library in the browser.
+- **+ New library** asks whose library it will be before you load a file. The current shelf is kept until a new file actually loads, so **Back to the bookshelf** (or Esc) returns to it. The name is remembered with the new library in the browser.
 - **Share library** asks for the name too (prefilled), and the link carries it, so the recipient sees the same plaque. Leave the name blank for no plaque.
 
 ## Sharing

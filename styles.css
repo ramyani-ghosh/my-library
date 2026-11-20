@@ -1057,39 +1057,173 @@ body.viewing { overflow: hidden; }
   .action-btn { padding-left: 22px; padding-right: 22px; }
 }
 
-/* ---------- Brass name plaque on the bookcase ---------- */
+/* ---------- Name plaque on the bookcase ----------
+   Cast plaque: black hammered face, raised brass border with rounded
+   corners, a crest breaking the top edge, brass screws and raised
+   gold serif lettering. */
 
 .plaque {
+  --brass: linear-gradient(180deg, #f6e3a4 0%, #d6ae5c 40%, #a87b2f 75%, #e7c77c 100%);
   position: absolute;
-  top: 9px; left: 50%;
+  top: 6px; left: 50%;
   z-index: 10;              /* under the darkness veil, so it is lit with the room */
   transform: translateX(-50%);
   max-width: calc(100% - 40px);
-  padding: 8px 36px 7px;
+  padding: 21px 52px 14px;
   border-radius: 3px;
-  border: 1px solid #4a3410;
-  background:
-    radial-gradient(circle 3px at 13px 50%, #f6e2a8 0 1px, #6b4c18 2px, transparent 3px),
-    radial-gradient(circle 3px at calc(100% - 13px) 50%, #f6e2a8 0 1px, #6b4c18 2px, transparent 3px),
-    linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,246,214,0.35) 45%, rgba(255,255,255,0) 60%),
-    linear-gradient(180deg, #f0d48e 0%, #c99d4c 45%, #a57a33 70%, #8a6326 100%);
+  background-color: #17140f;
+  background-image:
+    radial-gradient(ellipse 80% 120% at 30% 0%, rgba(255, 235, 190, 0.10), transparent 60%),
+    var(--tex-hammer);
+  background-size: 100% 100%, 240px 120px;
+  background-blend-mode: normal, overlay;
   box-shadow:
-    inset 0 1px 0 rgba(255, 244, 210, 0.7),
-    inset 0 -1px 0 rgba(60, 40, 10, 0.6),
-    inset 0 0 0 3px rgba(120, 85, 30, 0.35),
-    0 4px 10px rgba(0, 0, 0, 0.65),
-    0 0 24px rgba(255, 190, 100, 0.12);
-  font-family: "Cinzel", Georgia, serif;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+    inset 0 0 0 1px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 0 rgba(255, 220, 160, 0.08),
+    0 6px 14px rgba(0, 0, 0, 0.7);
   white-space: nowrap;
+}
+/* raised brass border */
+.plaque::before {
+  content: "";
+  position: absolute;
+  inset: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid #c9a04e;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 -1px 0 rgba(255, 240, 200, 0.35);
+  pointer-events: none;
+}
+/* four brass screws in the corners */
+.plaque::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  --screw: radial-gradient(circle at 40% 35%, #fbe9b4 0 1px, #c99a45 2px, #6b4a17 3.2px, transparent 3.6px);
+  background:
+    var(--screw) 4px 3px / 8px 8px no-repeat,
+    var(--screw) calc(100% - 4px) 3px / 8px 8px no-repeat,
+    var(--screw) 4px calc(100% - 3px) / 8px 8px no-repeat,
+    var(--screw) calc(100% - 4px) calc(100% - 3px) / 8px 8px no-repeat;
+}
+/* crest ornament sitting on the top border */
+.plaque-crest {
+  position: absolute;
+  top: 1px; left: 50%;
+  width: 32px; height: 20px;
+  margin-left: -16px;
+  background: #17140f;          /* breaks the border line behind it */
+}
+.plaque-crest::after {
+  content: "";
+  position: absolute;
+  left: 6px; top: 0;
+  width: 20px; height: 20px;
+  background: var(--brass);
+  -webkit-mask: var(--plaque-orn) center / contain no-repeat;
+  mask: var(--plaque-orn) center / contain no-repeat;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.8));
+}
+.plaque-text {
+  position: relative;
+  display: block;
+  font-family: "Libre Caslon Text", Georgia, serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #3a2810;
-  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.55);   /* engraved */
+  color: transparent;
+  background: var(--brass);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.9)) drop-shadow(0 -1px 0 rgba(255, 240, 200, 0.15));
 }
+
+/* ---------- Pinned compact header ---------- */
+
+.topbar-slot { position: relative; z-index: 50; }
+.topbar.compact {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  max-width: none;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px max(16px, calc((100vw - 1560px) / 2)) 8px;
+  background: linear-gradient(180deg, rgba(14, 11, 9, 0.97), rgba(14, 11, 9, 0.92));
+  border-bottom: 1px solid rgba(200, 138, 78, 0.28);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  animation: bar-in 0.28s cubic-bezier(.2, .8, .2, 1);
+}
+@keyframes bar-in { from { transform: translateY(-100%); } to { transform: none; } }
+.topbar.compact .tb-brand { width: auto; justify-items: start; }
+.topbar.compact .brand { font-size: 17px; justify-items: start; }
+.topbar.compact .count,
+.topbar.compact .sort-word,
+.topbar.compact .sort-current,
+.topbar.compact .sort-caret,
+.topbar.compact .btn-text,
+.topbar.compact .tb-divider { display: none; }
+.topbar.compact .tb-actions { width: auto; flex-wrap: nowrap; gap: 8px; }
+.topbar.compact .sort { width: auto; }
+.topbar.compact .sort-trigger,
+.topbar.compact .action-btn {
+  width: 38px; height: 38px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+}
+.topbar.compact .sort-trigger { border-color: rgba(200, 138, 78, 0.5); }
+.topbar.compact .action-btn::before, .topbar.compact .action-btn::after { display: none; }
+.topbar.compact .action-btn svg { margin: 0; }
+.topbar.compact .sort-menu { left: auto; right: 0; transform: none; }
+
+/* ---------- Back link + dialog close ---------- */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 18px;
+  padding: 6px 10px 5px 6px;
+  font-family: var(--caps);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.back-link svg { color: var(--copper); }
+.back-link:hover { color: var(--cream); border-color: rgba(200, 138, 78, 0.35); }
+.back-link:focus-visible { outline: 1px solid var(--cream); outline-offset: 2px; }
+
+.dialog-x {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 34px; height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0 0 2px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--cream-dim);
+  background: none;
+  border: 1px solid rgba(200, 138, 78, 0.4);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dialog-x:hover { color: var(--cream); background: rgba(200, 138, 78, 0.15); }
+.dialog-x:focus-visible { outline: 1px solid var(--cream); outline-offset: 2px; }
 
 /* ---------- Name dialog ---------- */
 
@@ -1163,7 +1297,11 @@ body.viewing { overflow: hidden; }
 @media (max-width: 640px) {
   :root { --tier-h: 232px; --pilaster-w: 22px; --board-h: 18px; }
   .topbar .brand { font-size: 26px; }
-  .plaque { top: 8px; font-size: 11px; padding: 6px 26px 5px; letter-spacing: 0.12em; }
+  .plaque { top: 4px; padding: 16px 34px 10px; }
+  .plaque::before { inset: 6px 7px; border-radius: 8px; }
+  .plaque-crest { top: 0; width: 26px; height: 16px; margin-left: -13px; }
+  .plaque-crest::after { left: 5px; width: 16px; height: 16px; }
+  .plaque-text { font-size: 15px; }
   .welcome-script { font-size: 2.2rem; }
   .steps { padding-left: 34px; padding-right: 8px; }
   .cornice { height: 44px; }

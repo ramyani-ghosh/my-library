@@ -21,6 +21,9 @@
     </div>
   </div>
 
+  <!-- The slot keeps the header's space in the page while the header itself
+       is pinned to the top in its compact form. -->
+  <div class="topbar-slot" id="topbarSlot">
   <header class="topbar" id="topbar">
     <div class="tb-brand">
       <h1 class="brand" id="brand">
@@ -43,22 +46,24 @@
 
       <span class="tb-divider" aria-hidden="true"></span>
 
-      <button type="button" class="notch-btn action-btn" id="shareBtn" hidden>
+      <button type="button" class="notch-btn action-btn" id="shareBtn" title="Share library" aria-label="Share library" hidden>
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M7 10H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>
-        Share library
+        <span class="btn-text">Share library</span>
       </button>
-      <button type="button" class="notch-btn action-btn" id="resetBtn" hidden>
+      <button type="button" class="notch-btn action-btn" id="resetBtn" title="New library" aria-label="New library" hidden>
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        New library
+        <span class="btn-text">New library</span>
       </button>
     </div>
   </header>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Asks whose library it is (Share library / New library) -->
   <div class="dialog" id="nameDialog" role="dialog" aria-modal="true" aria-labelledby="ndTitle" hidden>
     <div class="dialog-backdrop" data-close></div>
     <form class="dialog-card" id="nameForm">
+      <button type="button" class="dialog-x" data-close aria-label="Close">&times;</button>
       <p class="dialog-script" id="ndTitle">Share this library</p>
       <label class="dialog-label" for="ownerInput">Whose library is this?</label>
       <input class="dialog-input" id="ownerInput" type="text" maxlength="40" autocomplete="given-name" placeholder="Your first name" spellcheck="false">
@@ -73,6 +78,10 @@
   <main>
     <!-- Welcome / import -->
     <section class="welcome" id="welcome" hidden>
+      <button type="button" class="back-link" id="backBtn" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        Back to the bookshelf
+      </button>
       <p class="welcome-script" id="welcomeTitle">Bring your books home</p>
       <p class="lede">My Library shelves every book on your Goodreads <em>read</em> shelf, by candlelight.</p>
 
@@ -98,7 +107,7 @@
 
     <!-- Bookcase -->
     <section class="bookcase" id="bookcase" hidden>
-      <div class="plaque" id="plaque" hidden><span id="plaqueText"></span></div>
+      <div class="plaque" id="plaque" hidden><span class="plaque-crest" aria-hidden="true"></span><span class="plaque-text" id="plaqueText"></span></div>
       <div class="cornice"></div>
       <div class="wall" id="wall"></div>
       <div class="plinth"></div>
