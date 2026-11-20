@@ -1069,10 +1069,19 @@ body.viewing { overflow: hidden; }
 }
 @media (max-width: 560px) {
   .tb-divider { display: none; }
-  .sort { width: 100%; display: flex; justify-content: center; }
+  /* phones: Share + New library side by side, Sort on its own row below */
+  .tb-actions { gap: 10px 8px; }
+  .topbar:not(.compact) .sort { order: 3; width: 100%; display: flex; justify-content: center; }
   .sort-menu { right: auto; left: 50%; transform: translateX(-50%); }
   @keyframes menu-in { from { opacity: 0; } to { opacity: 1; } }
-  .action-btn { padding-left: 22px; padding-right: 22px; }
+  .topbar:not(.compact) .action-btn {
+    gap: 7px;
+    padding: 9px 17px 7px;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+  }
+  .topbar:not(.compact) .action-btn::before { left: 7px; }
+  .topbar:not(.compact) .action-btn::after { right: 7px; }
 }
 
 /* ---------- Name plaque on the bookcase ----------

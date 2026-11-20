@@ -621,7 +621,12 @@
         if (bays > 1 && (t + i) % 2 === 0) return;
         if (bays === 1 && t % 2 === 1 && tiers > 2 && t % 4 === 3) return;
         const pr = p.getBoundingClientRect();
-        lights.push({ x: pr.left - wallRect.left + pr.width / 2, y: tr.top - wallRect.top + tierH * 0.52 });
+        // Between bays a sconce sits on the column's centre. With a single bay
+        // (phones) the only columns are the outer edges, so mount it on their
+        // inner side; otherwise the case edge would clip it in half.
+        let x = pr.left - wallRect.left + pr.width / 2;
+        if (bays === 1) x = i === 0 ? pr.right - wallRect.left + 13 : pr.left - wallRect.left - 13;
+        lights.push({ x, y: tr.top - wallRect.top + tierH * 0.52 });
       });
     });
 
