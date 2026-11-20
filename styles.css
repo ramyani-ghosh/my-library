@@ -404,7 +404,19 @@ body.intro .tb-side { opacity: 0; }
   z-index: 4;
   background: radial-gradient(circle closest-side, rgba(255,170,88,0.24), rgba(255,140,60,0.09) 45%, rgba(255,130,50,0.02) 75%, transparent);
   animation: pool 3s ease-in-out infinite;
-  will-change: opacity, transform;
+}
+/* candles far from the screen sleep: no glow pool, no flicker */
+.pool.asleep { display: none; }
+.sconce.asleep .flame, .sconce.asleep .halo { animation: none; }
+
+/* Desktop (mouse): each spine keeps its own GPU layer so sorting never
+   repaints. Phones skip this: 200+ permanent layers plus the candles
+   exceeded iPhone Safari's graphics memory and it dropped the books. */
+@media (hover: hover) and (pointer: fine) {
+  .book { will-change: transform; }
+}
+@media (max-width: 640px) {
+  .pool { width: 460px; height: 460px; margin: -230px 0 0 -230px; }
 }
 @keyframes pool {
   0%   { opacity: 0.85; transform: translate(0, 0) scale(1); }
@@ -526,7 +538,6 @@ body.intro .tb-side { opacity: 0; }
   --hx: 32%;           /* where the highlight sits across the spine */
   position: absolute;  /* placed by JS; never moved in the DOM */
   pointer-events: auto;
-  will-change: transform;   /* own GPU layer: painted once, then just moved */
   border-radius: 4px 4px 1px 1px;
   background-color: #0a0706;     /* black base; the binding sits over it */
   cursor: pointer;

@@ -90,7 +90,9 @@ A cast plaque on the top of the bookcase names the library, for example "Ramyani
 
 ## Performance notes
 
-Each spine is created once, sits on its own GPU layer, and is moved only by position and transform, so sorting doesn't repaint anything. Two things that looked harmless were expensive and are deliberately avoided: rounded corners on the spine's inner texture layers (the spine itself clips them), and a CSS filter on each spine.
+Each spine is created once and moved only by position and transform, so sorting doesn't repaint anything. On desktop each spine also keeps its own GPU layer.
+
+Phones are budgeted separately. With one bay the case is a single very tall column (about 37 shelves and 28 candles), and keeping every candle's glow animating, a full-height darkness mask and 200+ permanent book layers needed roughly 650 MB of graphics memory on an iPhone. Safari then dropped the book layers and the shelves showed empty. So on phones only candles near the screen glow and flicker, the darkness is a tint on each book, and spines get GPU layers only while they move (about 25 MB in all). Two things that looked harmless were expensive and are deliberately avoided: rounded corners on the spine's inner texture layers (the spine itself clips them), and a CSS filter on each spine.
 
 ## Opening a book
 

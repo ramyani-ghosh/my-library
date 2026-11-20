@@ -571,6 +571,7 @@
     }
 
     // Place every spine by arithmetic: no measuring needed.
+    const placed = [];
     shelves.forEach((idxs, s) => {
       const t = Math.floor(s / bays), b = s % bays;
       const r = rng(hash(`bay${t}-${b}`));
@@ -599,12 +600,14 @@
         }
         el.style.left = Math.round(x) + "px";   // whole pixels: no repaint when moved
         el.style.top = Math.round(floor - d.h) + "px";
+        placed.push({ el, cx: x + d.w / 2, cy: floor - d.h / 2 });
         x += d.w + 1;
         usedW += d.w + 1;
       });
     });
 
     if (structural) placeCandles(bays, tiers, tierH);
+    shadeBooks(placed, bays);
   }
 
   // Sconces sit on the columns in a checkerboard; light falls off away from them.
@@ -631,14 +634,20 @@
 
     // Darkness everywhere except near a candle: one static layer whose mask
     // has a clear hole around each flame (holes combine by intersection).
-    const dark = make("dark");
-    const holes = lights.map((l) =>
-      `radial-gradient(circle 330px at ${l.x}px ${l.y - 20}px, transparent 0, transparent 18%, rgba(0,0,0,0.55) 55%, #000 100%)`).join(",");
-    if (holes) {
-      dark.style.webkitMaskImage = holes;
-      dark.style.maskImage = holes;
+    // On a phone the case is one very tall column; a mask that size costs
+    // tens of MB of graphics memory, so phones shade each book instead
+    // (see shadeBooks).
+    currentLights = lights;
+    if (bays > 1) {
+      const dark = make("dark");
+      const holes = lights.map((l) =>
+        `radial-gradient(circle 330px at ${l.x}px ${l.y - 20}px, transparent 0, transparent 18%, rgba(0,0,0,0.55) 55%, #000 100%)`).join(",");
+      if (holes) {
+        dark.style.webkitMaskImage = holes;
+        dark.style.maskImage = holes;
+      }
+      frag.appendChild(dark);
     }
-    frag.appendChild(dark);
 
     // The big light pools are clipped to the case; the sconces are not.
     const pools = make("pools");
@@ -670,6 +679,47 @@
 
     frag.appendChild(make("shade"));
     parts.lights.replaceChildren(frag);
+    sleepFarCandles();
+  }
+
+  // Phones: tint each book by its distance from the candles (cheap and static),
+  // instead of the full-height darkness mask used on wider screens.
+  let currentLights = [];
+  function shadeBooks(placed, bays) {
+    if (bays > 1) {
+      for (const { el } of placed) el.style.removeProperty("--light");
+      return;
+    }
+    for (const { el, cx, cy } of placed) {
+      let sum = 0;
+      for (const l of currentLights) {
+        const d = Math.hypot((cx - l.x) * 0.85, (cy - l.y) * 1.25);
+        sum += Math.exp(-((d / 260) ** 2));
+      }
+      const lit = Math.min(1.14, 0.56 + sum * 0.66);
+      el.style.setProperty("--light", lit < 1
+        ? `rgba(8,5,3,${(1 - lit).toFixed(3)})`
+        : `rgba(255,190,120,${((lit - 1) * 0.6).toFixed(3)})`);
+    }
+  }
+
+  // Only candles near the screen flicker and cast their light pool; the rest
+  // sleep. A phone's single tall column has ~30 candles, and keeping all
+  // their animated layers alive made iPhone Safari drop the books' layers.
+  let candleWatcher = null;
+  function sleepFarCandles() {
+    if (candleWatcher) candleWatcher.disconnect();
+    const sconces = [...parts.lights.querySelectorAll(".sconce")];
+    const pools = [...parts.lights.querySelectorAll(".pool")];
+    sconces.forEach((s, i) => { s.classList.add("asleep"); if (pools[i]) pools[i].classList.add("asleep"); });
+    candleWatcher = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const i = sconces.indexOf(e.target);
+        e.target.classList.toggle("asleep", !e.isIntersecting);
+        if (pools[i]) pools[i].classList.toggle("asleep", !e.isIntersecting);
+      }
+    }, { rootMargin: "500px 0px" });
+    sconces.forEach((s) => candleWatcher.observe(s));
   }
 
   /* ============================================================
