@@ -85,8 +85,22 @@ A cast plaque on the top of the bookcase names the library, for example "Ramyani
 **Share library** (top right, next to **+ New library**) copies a link, or opens the share sheet on phones.
 
 - The library published with the site (`library.csv`) is shared as the site's own address.
-- A library loaded from a file only exists in that browser, so it is compressed into the link itself, after the `#`. That part never reaches a server. A 200-book library with reviews makes a link of roughly 26,000 characters. If a library is so large the link would pass about 60,000, reviews are left out.
+- A library loaded from a file only exists in that browser, so sharing stores it with a small Cloudflare Worker (see below) and the link carries just a 12-character ID: `…/my-library/#s=Ab3dE9xQk2Lm&owner=Sam`, about 75 characters, reviews included. The same library always gets the same ID.
+- If the share service can't be reached, sharing falls back to packing the whole compressed library into the link after the `#` (roughly 26,000 characters for 200 books with reviews; reviews are dropped past about 60,000). Old long links keep working.
 - Opening a shared link shows that library without replacing the visitor's own.
+
+## Short-link service (`share-worker/`)
+
+A Cloudflare Worker with one Workers KV namespace, on the free plan (1,000 new shares and 100,000 link opens a day). The site finds it through `<meta name="share-service">` in `index.html`.
+
+- `POST /s` with the packed library → `{ "id": "…" }`. Only accepted from the site's own address (and the local preview), up to 300 KB, and only well-formed packed data. The ID is a hash of the content.
+- `GET /s/<id>` → the packed library.
+
+Stored libraries live in the Cloudflare account and aren't listed anywhere; anyone with a link can open that library, just as with the old long links. To redeploy after editing `worker.js` (needs Node 22+):
+
+```bash
+cd share-worker && npx wrangler login && npx wrangler deploy
+```
 
 ## Performance notes
 

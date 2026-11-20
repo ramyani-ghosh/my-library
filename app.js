@@ -1463,9 +1463,34 @@
   /* ---------- sharing ---------- */
 
   // The packed library (only for libraries that live in this browser).
+  // Short links: the packed library is stored by a small Cloudflare Worker
+  // (see share-worker/) and the link carries only its 12-character ID.
+  const SHARE_SERVICE = (document.querySelector('meta[name="share-service"]')?.content || "").replace(/\/+$/, "");
+
+  async function storeShare(code) {
+    if (!SHARE_SERVICE) return null;
+    const ctl = new AbortController();
+    const t = setTimeout(() => ctl.abort(), 8000);
+    try {
+      // text/plain keeps this a "simple" request (no CORS preflight)
+      const res = await fetch(`${SHARE_SERVICE}/s`, { method: "POST", body: code, headers: { "Content-Type": "text/plain" }, signal: ctl.signal });
+      if (!res.ok) return null;
+      return (await res.json()).id || null;
+    } catch { return null; } finally { clearTimeout(t); }
+  }
+
+  async function loadShare(id) {
+    const res = await fetch(`${SHARE_SERVICE}/s/${encodeURIComponent(id)}`);
+    if (!res.ok) throw new Error(res.status === 404 ? "missing" : "unreachable");
+    return decodeLibrary(await res.text());
+  }
+
   async function libraryCode() {
     if (libSource !== "upload" && libSource !== "shared") return null;
     let code = await encodeLibrary(allBooks, true), note = "";
+    const id = await storeShare(code);
+    if (id) return { id, code, note };
+    // Storage unreachable: fall back to packing the library into the link.
     if (code.length > MAX_LINK) {
       code = await encodeLibrary(allBooks, false);
       note = " Reviews were left out to keep the link a sensible length.";
@@ -1477,7 +1502,8 @@
     const base = location.origin + location.pathname;
     const p = new URLSearchParams();
     if (libSource === "sample") p.set("sample", "");
-    if (packed) p.set("lib", packed.code);
+    if (packed && packed.id) p.set("s", packed.id);
+    else if (packed) p.set("lib", packed.code);
     // the site's own library already knows its owner; only add a different name
     if (owner && !(libSource === "published" && owner === SITE_OWNER)) p.set("owner", owner);
     const h = p.toString().replace(/^sample=(&|$)/, "sample$1");
@@ -1609,6 +1635,18 @@
     const hp = hashParams();
     const hashOwner = hp.get("owner");
     // 1. A library shared by link (#lib=…) or the sample (#sample)
+    if (hp.get("s") && SHARE_SERVICE) {
+      try {
+        const list = await loadShare(hp.get("s"));
+        libSource = "shared";
+        setOwner(hashOwner || "");
+        return list;
+      } catch (e) {
+        showError(e.message === "missing"
+          ? "That shared library couldn't be found \u2014 the link may be mistyped."
+          : "Couldn't reach the shared library just now. Please try the link again in a moment.");
+      }
+    }
     if (hp.get("lib")) {
       try {
         const list = await decodeLibrary(hp.get("lib"));

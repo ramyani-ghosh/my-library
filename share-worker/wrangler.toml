@@ -1,0 +1,10 @@
+# Cloudflare Worker that stores shared libraries for short share links.
+# Deploy:  npx wrangler deploy   (needs Node 22+ and `npx wrangler login`)
+name = "my-library-share"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "SHARES"
+id = "e1b39df4de6943d5a6ae4e8db58dc945"
