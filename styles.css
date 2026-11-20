@@ -777,7 +777,9 @@ body.viewing { overflow: hidden; }
   padding: 28px 84px;
 }
 .v-backdrop {
-  position: absolute; inset: 0;
+  /* fixed, not absolute: on phones the viewer scrolls, and an absolute
+     backdrop only covered the first screenful */
+  position: fixed; inset: 0;
   background: radial-gradient(ellipse 70% 70% at 38% 45%, rgba(38, 24, 14, 0.86), rgba(5, 4, 3, 0.96));
 }
 .v-stage {
@@ -933,6 +935,7 @@ body.viewing { overflow: hidden; }
 }
 .rating-num { font-family: var(--caps); font-weight: 600; font-size: 0.95rem; color: var(--cream); letter-spacing: 0.06em; }
 .rating-note { font-style: italic; color: var(--cream-dim); font-size: 0.95rem; }
+.thin .stars, .thin .rating-num { opacity: 0.55; }   /* few ratings: shown, but quieter */
 
 .v-meta { margin: 4px 0 16px; font-style: italic; color: var(--cream-dim); }
 .v-meta:empty { display: none; }
@@ -1001,7 +1004,8 @@ body.viewing { overflow: hidden; }
 .v-next { right: 20px; }
 
 @media (max-width: 760px) {
-  .viewer { align-items: flex-start; overflow-y: auto; padding: 70px 18px 40px; }
+  .viewer { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; padding: 70px 18px 40px; }
+  .v-backdrop { background: rgba(10, 8, 6, 0.97); }   /* text sits right over it on phones: keep it solid */
   .v-stage { flex-direction: column; gap: 26px; max-height: none; }
   .cover { width: min(230px, 62vw); }
   .v-panel { max-height: none; width: 100%; }
@@ -1053,11 +1057,113 @@ body.viewing { overflow: hidden; }
   .action-btn { padding-left: 22px; padding-right: 22px; }
 }
 
+/* ---------- Brass name plaque on the bookcase ---------- */
+
+.plaque {
+  position: absolute;
+  top: 9px; left: 50%;
+  z-index: 10;              /* under the darkness veil, so it is lit with the room */
+  transform: translateX(-50%);
+  max-width: calc(100% - 40px);
+  padding: 8px 36px 7px;
+  border-radius: 3px;
+  border: 1px solid #4a3410;
+  background:
+    radial-gradient(circle 3px at 13px 50%, #f6e2a8 0 1px, #6b4c18 2px, transparent 3px),
+    radial-gradient(circle 3px at calc(100% - 13px) 50%, #f6e2a8 0 1px, #6b4c18 2px, transparent 3px),
+    linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,246,214,0.35) 45%, rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, #f0d48e 0%, #c99d4c 45%, #a57a33 70%, #8a6326 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 244, 210, 0.7),
+    inset 0 -1px 0 rgba(60, 40, 10, 0.6),
+    inset 0 0 0 3px rgba(120, 85, 30, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(255, 190, 100, 0.12);
+  font-family: "Cinzel", Georgia, serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #3a2810;
+  text-shadow: 0 1px 0 rgba(255, 240, 200, 0.55);   /* engraved */
+}
+
+/* ---------- Name dialog ---------- */
+
+.dialog {
+  position: fixed; inset: 0;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px;
+}
+.dialog-backdrop {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(30, 20, 12, 0.82), rgba(5, 4, 3, 0.94));
+  animation: fade-in 0.2s ease-out;
+}
+.dialog-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 26px 28px 22px;
+  background: #15110e;
+  border: 1px solid rgba(200, 138, 78, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+  animation: rise 0.25s ease-out;
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+.dialog-script { margin: 0 0 14px; font-family: var(--script); font-size: 2rem; color: var(--copper); }
+.dialog-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--caps);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.dialog-input {
+  width: 100%;
+  padding: 11px 14px 9px;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(200, 138, 78, 0.45);
+  border-radius: 6px;
+  outline: none;
+}
+.dialog-input::placeholder { color: rgba(185, 174, 152, 0.5); font-style: italic; }
+.dialog-input:focus { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(200, 138, 78, 0.18); }
+.dialog-preview { min-height: 1.3em; margin: 10px 0 20px; font-style: italic; color: var(--cream-dim); }
+.dialog-actions { display: flex; justify-content: flex-end; align-items: center; gap: 18px; }
+.quiet-link {
+  font-family: var(--caps);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  background: none;
+  border: 0;
+  padding: 6px 2px;
+  border-bottom: 1px solid rgba(185, 174, 152, 0.35);
+  cursor: pointer;
+}
+.quiet-link:hover { color: var(--cream); border-bottom-color: var(--copper); }
+.quiet-link:focus-visible { outline: 1px solid var(--cream); outline-offset: 3px; }
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 640px) {
   :root { --tier-h: 232px; --pilaster-w: 22px; --board-h: 18px; }
   .topbar .brand { font-size: 26px; }
+  .plaque { top: 8px; font-size: 11px; padding: 6px 26px 5px; letter-spacing: 0.12em; }
   .welcome-script { font-size: 2.2rem; }
   .steps { padding-left: 34px; padding-right: 8px; }
   .cornice { height: 44px; }

@@ -730,6 +730,7 @@
       const list = booksFromCSV(text);
       if (persist) save(list);
       libSource = persist ? "upload" : "sample";
+      setOwner(pendingOwner, { persist });
       if (location.hash) history.replaceState(null, "", location.pathname + location.search);
       await showLibrary(list);
     } catch (e) {
@@ -1013,47 +1014,67 @@
 
   // Community rating: the Goodreads average if the export has it,
   // otherwise Open Library's readers (fetched on demand, then cached).
-  const OL_KEY = "mylibrary.ol.v1";
+  const OL_KEY = "mylibrary.ol.v2";
+  const THIN = 10;   // fewer ratings than this is flagged as not very reliable
   let olCache = {};
   try { olCache = JSON.parse(localStorage.getItem(OL_KEY) || "{}"); } catch { /* ignore */ }
 
+  const normText = (s) => String(s).normalize("NFKD").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  // Open Library often has several entries for one book; the first search hit
+  // can be a near-empty duplicate. Ask a few ways and keep the best-rated match.
   async function olRating(book) {
     if (book.id in olCache) return olCache[book.id];
-    const ask = async (params) => {
+    const title = book.title.replace(/\s*\([^)]*#[\d.]+[^)]*\)\s*$/, "").split(/:\s/)[0];
+    const last = book.author.split(/\s+/).pop();
+    const ask = async (params, limit) => {
       const ctl = new AbortController();
-      const t = setTimeout(() => ctl.abort(), 8000);
+      const t = setTimeout(() => ctl.abort(), 9000);
       try {
-        const res = await fetch(`https://openlibrary.org/search.json?${params}&fields=ratings_average,ratings_count&limit=1`, { signal: ctl.signal });
-        const j = await res.json();
-        const d = j.docs && j.docs[0];
-        return d && d.ratings_count ? { avg: d.ratings_average, count: d.ratings_count } : null;
+        const res = await fetch(`https://openlibrary.org/search.json?${params}&fields=title,author_name,ratings_average,ratings_count&limit=${limit}`, { signal: ctl.signal });
+        return (await res.json()).docs || [];
       } finally { clearTimeout(t); }
     };
-    let result = null;
+    const matches = (d) => {
+      const a = normText(title).slice(0, 20), b = normText(d.title || "");
+      return (b.includes(a) || a.includes(b.slice(0, 20))) &&
+        (d.author_name || []).some((n) => normText(n).includes(normText(last)));
+    };
+    let best = null;
+    const consider = (d, trusted) => {
+      if (!d || !d.ratings_count || !(trusted || matches(d))) return;
+      if (!best || d.ratings_count > best.count) best = { avg: d.ratings_average, count: d.ratings_count };
+    };
     try {
-      if (book.isbn) result = await ask(`isbn=${encodeURIComponent(book.isbn)}`);
-      if (!result) {
-        const title = book.title.replace(/\s*\([^)]*#[\d.]+[^)]*\)\s*$/, "").split(/:\s/)[0];
-        result = await ask(`title=${encodeURIComponent(title)}&author=${encodeURIComponent(book.author)}`);
-      }
-    } catch { return undefined; } // network trouble: don't cache, try again next time
-    olCache[book.id] = result;
+      const lookups = [
+        ask(`title=${encodeURIComponent(title)}&author=${encodeURIComponent(book.author)}`, 1).then((r) => consider(r[0], true)),
+        ask(`q=${encodeURIComponent(`${title} ${last}`)}`, 15).then((r) => r.forEach((d) => consider(d, false))),
+      ];
+      if (book.isbn) lookups.push(ask(`isbn=${encodeURIComponent(book.isbn)}`, 1).then((r) => consider(r[0], true)));
+      const done = await Promise.allSettled(lookups);
+      if (done.every((x) => x.status === "rejected")) return undefined;   // offline: try again later
+    } catch { return undefined; }
+    olCache[book.id] = best;
     try { localStorage.setItem(OL_KEY, JSON.stringify(olCache)); } catch { /* ignore */ }
-    return result;
+    return best;
   }
 
   async function fillCommunity(book) {
     const box = v.community;
     if (book.avgRating) { box.replaceChildren(ratingLine(book.avgRating, "Goodreads average")); return; }
-    box.replaceChildren(Object.assign(document.createElement("span"), { className: "rating-note", textContent: "Looking it up…" }));
+    box.replaceChildren(Object.assign(document.createElement("span"), { className: "rating-note", textContent: "Looking it up\u2026" }));
     const r = await olRating(book);
     if (books[viewer.idx] !== book) return; // moved on to another book
     if (r) {
-      box.replaceChildren(ratingLine(r.avg, `${r.count.toLocaleString()} rating${r.count === 1 ? "" : "s"} on Open Library`));
+      const n = `${r.count.toLocaleString()} rating${r.count === 1 ? "" : "s"} on Open Library`;
+      const line = ratingLine(r.avg, r.count < THIN ? `only ${n}, so take it lightly` : n);
+      box.replaceChildren(line);
+      box.classList.toggle("thin", r.count < THIN);
     } else {
+      box.classList.remove("thin");
       box.replaceChildren(Object.assign(document.createElement("span"), {
         className: "rating-note",
-        textContent: r === undefined ? "Couldn't reach Open Library" : "No community ratings found",
+        textContent: r === undefined ? "Couldn't reach Open Library" : "No community ratings found yet",
       }));
     }
   }
@@ -1270,38 +1291,149 @@
     toastTimer = setTimeout(() => els.toast.classList.remove("show"), 4200);
   }
 
-  async function shareLink() {
-    const base = location.origin + location.pathname;
-    if (libSource === "published") return { url: base };
-    if (libSource === "sample") return { url: base + "#sample" };
-    let code = await encodeLibrary(allBooks, true);
-    let note = "";
+  /* ============================================================
+     Whose library: the plaque on the bookcase
+     ============================================================ */
+
+  const OWNER_KEY = "mylibrary.owner";
+  const SITE_OWNER = (document.querySelector('meta[name="library-owner"]')?.content || "").trim();
+  let owner = "";
+  let pendingOwner = "";   // typed into "New library", applied once a file is loaded
+
+  const cleanName = (s) => String(s || "").replace(/\s+/g, " ").trim().slice(0, 40);
+  const possessive = (n) => (/s$/i.test(n) ? `${n}’` : `${n}’s`);
+  const libraryTitle = (n) => (n ? `${possessive(n)} Library` : "My Library");
+
+  function setOwner(name, { persist = libSource === "upload" } = {}) {
+    owner = cleanName(name);
+    $("plaqueText").textContent = owner ? libraryTitle(owner) : "";
+    $("plaque").hidden = !owner;
+    document.title = libraryTitle(owner);
+    if (persist) {
+      try { owner ? localStorage.setItem(OWNER_KEY, owner) : localStorage.removeItem(OWNER_KEY); } catch { /* ignore */ }
+    }
+  }
+
+  // Hash forms: #lib=CODE&owner=NAME   #sample&owner=NAME   #owner=NAME
+  function hashParams() {
+    return new URLSearchParams(location.hash.replace(/^#/, ""));
+  }
+
+  /* ---------- name dialog ---------- */
+
+  const nd = {
+    root: $("nameDialog"), form: $("nameForm"), title: $("ndTitle"),
+    input: $("ownerInput"), preview: $("ownerPreview"), submit: $("ndSubmit"),
+  };
+  let ndMode = null, ndReturn = null, ndLink = null;
+
+  function openNameDialog(mode) {
+    ndMode = mode;
+    ndReturn = document.activeElement;
+    nd.title.textContent = mode === "share" ? "Share this library" : "Start a new library";
+    nd.submit.textContent = mode === "share" ? "Copy link" : "Continue";
+    nd.input.value = mode === "share" ? owner : "";
+    nd.input.placeholder = "First name";
+    updatePreview();
+    nd.root.hidden = false;
+    document.body.classList.add("viewing");
+    nd.input.focus();
+    nd.input.select();
+    // Start packing the library into a link now, so copying is instant.
+    ndLink = mode === "share" ? libraryCode().catch(() => null) : null;
+  }
+  function closeNameDialog() {
+    nd.root.hidden = true;
+    document.body.classList.remove("viewing");
+    if (ndReturn && ndReturn.focus) ndReturn.focus();
+  }
+  function updatePreview() {
+    const n = cleanName(nd.input.value);
+    nd.preview.textContent = n ? `The plaque will read “${libraryTitle(n)}”` : "Leave it blank for no plaque.";
+  }
+  nd.input.addEventListener("input", updatePreview);
+  nd.root.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) closeNameDialog(); });
+  nd.root.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); closeNameDialog(); }
+    if (e.key === "Tab") {   // keep focus in the dialog
+      const f = [...nd.root.querySelectorAll("input, button")];
+      const i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  nd.form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = cleanName(nd.input.value);
+    if (ndMode === "new") {
+      pendingOwner = name;
+      closeNameDialog();
+      startNewLibrary();
+      return;
+    }
+    setOwner(name);
+    closeNameDialog();
+    await shareNow(await ndLink);
+  });
+
+  /* ---------- sharing ---------- */
+
+  // The packed library (only for libraries that live in this browser).
+  async function libraryCode() {
+    if (libSource !== "upload" && libSource !== "shared") return null;
+    let code = await encodeLibrary(allBooks, true), note = "";
     if (code.length > MAX_LINK) {
       code = await encodeLibrary(allBooks, false);
       note = " Reviews were left out to keep the link a sensible length.";
     }
-    return { url: `${base}#lib=${code}`, note };
+    return { code, note };
   }
 
-  els.shareBtn.addEventListener("click", async () => {
-    let link;
-    try { link = await shareLink(); }
-    catch { toast("Sorry — this browser can't build a share link."); return; }
+  function buildLink(packed) {
+    const base = location.origin + location.pathname;
+    const p = new URLSearchParams();
+    if (libSource === "sample") p.set("sample", "");
+    if (packed) p.set("lib", packed.code);
+    // the site's own library already knows its owner; only add a different name
+    if (owner && !(libSource === "published" && owner === SITE_OWNER)) p.set("owner", owner);
+    const h = p.toString().replace(/^sample=(&|$)/, "sample$1");
+    return { url: h ? `${base}#${h}` : base, note: packed ? packed.note : "" };
+  }
+
+  async function shareNow(packed) {
+    if ((libSource === "upload" || libSource === "shared") && !packed) {
+      toast("Sorry — this browser can't build a share link.");
+      return;
+    }
+    const link = buildLink(packed);
     const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
     const tail = (link.note || "") + (local ? " (This is a local preview: the link works for others once the site is on GitHub Pages.)" : "");
-
-    // Phones and Safari get the system share sheet; elsewhere, copy it.
     if (navigator.share && matchMedia("(pointer: coarse)").matches) {
-      try { await navigator.share({ title: "My Library", url: link.url }); return; }
-      catch (e) { if (e && e.name === "AbortError") return; }
+      try { await navigator.share({ title: libraryTitle(owner), url: link.url }); return; }
+      catch (err) { if (err && err.name === "AbortError") return; }
     }
     try {
       await navigator.clipboard.writeText(link.url);
-      toast("Link copied." + tail);
+      toast(`Link to ${libraryTitle(owner)} copied.` + tail);
     } catch {
       window.prompt("Copy this link to share the library:", link.url);
     }
-  });
+  }
+
+  els.shareBtn.addEventListener("click", () => openNameDialog("share"));
+
+  /* ---------- new library ---------- */
+
+  function startNewLibrary() {
+    if (viewer.open) closeViewer(true);
+    clearSaved();
+    try { localStorage.removeItem(OWNER_KEY); } catch { /* ignore */ }
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    setOwner("", { persist: false });
+    $("welcomeTitle").textContent = pendingOwner ? `Bring ${possessive(pendingOwner)} books home` : "Bring your books home";
+    showWelcome();
+  }
 
   /* ============================================================
      Events
@@ -1326,12 +1458,7 @@
     }
   });
 
-  els.resetBtn.addEventListener("click", () => {
-    if (viewer.open) closeViewer(true);
-    clearSaved();
-    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-    showWelcome();
-  });
+  els.resetBtn.addEventListener("click", () => openNameDialog("new"));
 
   // Re-shelve whenever the bookcase's width changes. Watching the element
   // itself (not just the window) also catches a page that first laid out
@@ -1353,25 +1480,35 @@
      ============================================================ */
 
   async function findLibrary() {
+    const hp = hashParams();
+    const hashOwner = hp.get("owner");
     // 1. A library shared by link (#lib=…) or the sample (#sample)
-    const h = location.hash;
-    if (h.startsWith("#lib=")) {
-      try { libSource = "shared"; return await decodeLibrary(h.slice(5)); }
-      catch { showError("That shared link looks incomplete \u2014 it may have been cut off when it was copied."); }
+    if (hp.get("lib")) {
+      try {
+        const list = await decodeLibrary(hp.get("lib"));
+        libSource = "shared";
+        setOwner(hashOwner || "");
+        return list;
+      } catch { showError("That shared link looks incomplete \u2014 it may have been cut off when it was copied."); }
     }
-    if (h === "#sample") {
+    if (hp.has("sample")) {
       try {
         const res = await fetch("sample-library.csv");
-        if (res.ok) { libSource = "sample"; return booksFromCSV(await res.text()); }
+        if (res.ok) { libSource = "sample"; setOwner(hashOwner || ""); return booksFromCSV(await res.text()); }
       } catch { /* fall through */ }
     }
     // 2. What this visitor loaded last time
     const saved = load();
-    if (saved && saved.length) { libSource = "upload"; return saved; }
+    if (saved && saved.length) {
+      libSource = "upload";
+      let n = ""; try { n = localStorage.getItem(OWNER_KEY) || ""; } catch { /* ignore */ }
+      setOwner(n, { persist: false });
+      return saved;
+    }
     // 3. The library published with the site
     try {
       const res = await fetch("library.csv", { cache: "no-cache" });
-      if (res.ok) { libSource = "published"; return booksFromCSV(await res.text()); }
+      if (res.ok) { libSource = "published"; setOwner(hashOwner || SITE_OWNER, { persist: false }); return booksFromCSV(await res.text()); }
     } catch { /* no published library */ }
     return null;
   }

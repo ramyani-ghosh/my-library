@@ -64,6 +64,14 @@ Each book gets a stable "random" look from its Goodreads ID: cloth or leather co
 
 **Sort** (top right) shows the current order, for example "Date read · Newest first". Click it for a menu: choose date read, title, author, year published or rating, then the order (A to Z, newest first, and so on). The menu works with the keyboard too: arrow keys to move, Enter to choose, Esc to close. The books lift off the shelves and fly to their new places, and the choice is remembered in that browser.
 
+## Whose library: the plaque
+
+A brass plaque on the top of the bookcase names the library, for example "Ramyani’s Library". The page title follows it.
+
+- The published library's owner is set in `index.html`: `<meta name="library-owner" content="Ramyani">`.
+- **+ New library** asks whose library it will be before you load a file. The name is remembered with that library in the browser.
+- **Share library** asks for the name too (prefilled), and the link carries it, so the recipient sees the same plaque. Leave the name blank for no plaque.
+
 ## Sharing
 
 **Share library** (top right, next to **+ New library**) copies a link, or opens the share sheet on phones.
@@ -82,7 +90,7 @@ Click (or press Enter on) a spine. The book is drawn off the shelf and turns int
 
 - title and author
 - the reader's star rating (quarter stars supported) and review, with `<spoiler>` sections blurred until clicked
-- a community rating: the Goodreads average when the export has an "Average Rating" column (recent exports don't), otherwise the rating from Open Library readers, with how many ratings it's based on
+- a community rating: the Goodreads average when the export has an "Average Rating" column (recent exports don't), otherwise the rating from Open Library readers, with how many ratings it's based on. Open Library is searched several ways and the best-rated matching entry is used; ratings from fewer than 10 people are shown dimmed and flagged as thin. Goodreads closed its API in 2020, and Google Books now needs an API key, so Open Library is the only keyless source.
 - date read, year published, page count, and a link to the book on Goodreads
 
 Use the arrows or the ← → keys to move along the shelf, and × or Esc to put the book back.

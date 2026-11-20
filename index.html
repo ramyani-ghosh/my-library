@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Library</title>
+  <!-- Whose library library.csv is: shown on the plaque above the shelves -->
+  <meta name="library-owner" content="Ramyani">
   <meta name="description" content="Every book you've read on Goodreads, shelved in a candlelit vintage bookcase.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,10 +55,25 @@
   </header>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <!-- Asks whose library it is (Share library / New library) -->
+  <div class="dialog" id="nameDialog" role="dialog" aria-modal="true" aria-labelledby="ndTitle" hidden>
+    <div class="dialog-backdrop" data-close></div>
+    <form class="dialog-card" id="nameForm">
+      <p class="dialog-script" id="ndTitle">Share this library</p>
+      <label class="dialog-label" for="ownerInput">Whose library is this?</label>
+      <input class="dialog-input" id="ownerInput" type="text" maxlength="40" autocomplete="given-name" placeholder="Your first name" spellcheck="false">
+      <p class="dialog-preview" id="ownerPreview" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="quiet-link" data-close>Cancel</button>
+        <button type="submit" class="notch-btn action-btn" id="ndSubmit">Copy link</button>
+      </div>
+    </form>
+  </div>
+
   <main>
     <!-- Welcome / import -->
     <section class="welcome" id="welcome" hidden>
-      <p class="welcome-script">Bring your books home</p>
+      <p class="welcome-script" id="welcomeTitle">Bring your books home</p>
       <p class="lede">My Library shelves every book on your Goodreads <em>read</em> shelf, by candlelight.</p>
 
       <ol class="steps">
@@ -81,6 +98,7 @@
 
     <!-- Bookcase -->
     <section class="bookcase" id="bookcase" hidden>
+      <div class="plaque" id="plaque" hidden><span id="plaqueText"></span></div>
       <div class="cornice"></div>
       <div class="wall" id="wall"></div>
       <div class="plinth"></div>
