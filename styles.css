@@ -1069,7 +1069,7 @@ body.viewing { overflow: hidden; }
   z-index: 10;              /* under the darkness veil, so it is lit with the room */
   transform: translateX(-50%);
   max-width: calc(100% - 40px);
-  padding: 21px 52px 14px;
+  padding: 15px 34px 9px;
   border-radius: 3px;
   background-color: #17140f;
   background-image:
@@ -1088,8 +1088,8 @@ body.viewing { overflow: hidden; }
 .plaque::before {
   content: "";
   position: absolute;
-  inset: 8px 10px;
-  border-radius: 10px;
+  inset: 6px 7px;
+  border-radius: 8px;
   border: 2px solid #c9a04e;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.55),
@@ -1104,24 +1104,24 @@ body.viewing { overflow: hidden; }
   pointer-events: none;
   --screw: radial-gradient(circle at 40% 35%, #fbe9b4 0 1px, #c99a45 2px, #6b4a17 3.2px, transparent 3.6px);
   background:
-    var(--screw) 4px 3px / 8px 8px no-repeat,
-    var(--screw) calc(100% - 4px) 3px / 8px 8px no-repeat,
-    var(--screw) 4px calc(100% - 3px) / 8px 8px no-repeat,
-    var(--screw) calc(100% - 4px) calc(100% - 3px) / 8px 8px no-repeat;
+    var(--screw) 3px 2px / 7px 7px no-repeat,
+    var(--screw) calc(100% - 3px) 2px / 7px 7px no-repeat,
+    var(--screw) 3px calc(100% - 2px) / 7px 7px no-repeat,
+    var(--screw) calc(100% - 3px) calc(100% - 2px) / 7px 7px no-repeat;
 }
 /* crest ornament sitting on the top border */
 .plaque-crest {
   position: absolute;
-  top: 1px; left: 50%;
-  width: 32px; height: 20px;
-  margin-left: -16px;
+  top: 0; left: 50%;
+  width: 24px; height: 14px;
+  margin-left: -12px;
   background: #17140f;          /* breaks the border line behind it */
 }
 .plaque-crest::after {
   content: "";
   position: absolute;
-  left: 6px; top: 0;
-  width: 20px; height: 20px;
+  left: 5px; top: 0;
+  width: 14px; height: 14px;
   background: var(--brass);
   -webkit-mask: var(--plaque-orn) center / contain no-repeat;
   mask: var(--plaque-orn) center / contain no-repeat;
@@ -1130,11 +1130,12 @@ body.viewing { overflow: hidden; }
 .plaque-text {
   position: relative;
   display: block;
-  font-family: "Libre Caslon Text", Georgia, serif;
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 1.2;
-  letter-spacing: 0.02em;
+  /* light, narrow serif; slightly tracked so the gold reads as raised lettering */
+  font-family: "Instrument Serif", "Times New Roman", serif;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.15;
+  letter-spacing: 0.035em;
   overflow: hidden;
   text-overflow: ellipsis;
   color: transparent;
@@ -1297,11 +1298,11 @@ body.viewing { overflow: hidden; }
 @media (max-width: 640px) {
   :root { --tier-h: 232px; --pilaster-w: 22px; --board-h: 18px; }
   .topbar .brand { font-size: 26px; }
-  .plaque { top: 4px; padding: 16px 34px 10px; }
-  .plaque::before { inset: 6px 7px; border-radius: 8px; }
-  .plaque-crest { top: 0; width: 26px; height: 16px; margin-left: -13px; }
-  .plaque-crest::after { left: 5px; width: 16px; height: 16px; }
-  .plaque-text { font-size: 15px; }
+  .plaque { top: 5px; padding: 13px 26px 7px; }
+  .plaque::before { inset: 5px 6px; border-radius: 7px; }
+  .plaque-crest { width: 20px; height: 12px; margin-left: -10px; }
+  .plaque-crest::after { left: 4px; width: 12px; height: 12px; }
+  .plaque-text { font-size: 15.5px; }
   .welcome-script { font-size: 2.2rem; }
   .steps { padding-left: 34px; padding-right: 8px; }
   .cornice { height: 44px; }
