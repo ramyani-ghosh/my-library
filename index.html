@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English+SC&family=Instrument+Serif&family=Josefin+Sans:wght@400;600;700&family=Libre+Caslon+Text:wght@700&family=Playfair+Display:wght@700&family=Sorts+Mill+Goudy:ital@0;1&family=Yellowtail&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body class="intro">
   <!-- Large title shown on arrival; it glides up into the header -->
@@ -27,8 +27,10 @@
   <header class="topbar" id="topbar">
     <div class="tb-brand">
       <h1 class="brand" id="brand">
-        <span class="brand-script">my</span>
-        <span class="brand-caps">Library</span>
+        <a class="brand-link" id="brandLink" href="./" title="Back to the top">
+          <span class="brand-script">my</span>
+          <span class="brand-caps">Library</span>
+        </a>
       </h1>
       <span class="count" id="count"></span>
     </div>
@@ -137,6 +139,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

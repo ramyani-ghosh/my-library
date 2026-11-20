@@ -1128,6 +1128,23 @@
     fillCommunity(book);
   }
 
+  // Shrink cover text until its longest word fits on one line (words are
+  // never split). Needs the viewer visible so widths can be measured.
+  function fitCoverText() {
+    const fit = (el, min) => {
+      if (!el || !el.textContent) return;
+      let size = parseFloat(getComputedStyle(el).fontSize);
+      while (el.scrollWidth > el.clientWidth + 0.5 && size > min) {
+        size -= 0.5;
+        el.style.fontSize = size + "px";
+      }
+    };
+    const c = v.cover;
+    fit(c.querySelector(".cover-title"), 11);
+    fit(c.querySelector(".cover-sub"), 9);
+    fit(c.querySelector(".cover-author"), 8);
+  }
+
   // Transform that maps the cover's resting box onto a rect (for FLIP).
   function coverTransform(rect, lift = 0) {
     const f = v.cover.getBoundingClientRect();
@@ -1144,6 +1161,7 @@
     viewer.returnFocus = src;
     fillPanel(idx);
     v.root.hidden = false;
+    fitCoverText();
     document.body.classList.add("viewing");
 
     const from = src.getBoundingClientRect();
@@ -1219,6 +1237,7 @@
     viewer.idx = next;
     shelfEl(next)?.classList.add("pulled");
     fillPanel(next);
+    fitCoverText();
     const inA = v.cover.animate([{ transform: `translateX(${dist}px) rotate(${2 * delta}deg)`, opacity: 0 }, { transform: "none", opacity: 1 }],
       { duration: out * 1.4, easing: "cubic-bezier(.2,.7,.3,1)" });
     const inB = v.panel.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: out * 1.6, easing: "ease-out" });
@@ -1460,6 +1479,12 @@
   $("backBtn").addEventListener("click", backToShelf);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !els.welcome.hidden && previous && nd.root.hidden) backToShelf();
+  });
+
+  $("brandLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    closeSortMenu(false);
+    scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   });
 
   /* ============================================================
